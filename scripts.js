@@ -23,17 +23,24 @@ function operate (numA, operator, numB) {
 }
 
 const display = document.querySelector('.display');
+let displayVal = display.textContent;
+
+let updateDisplay = function (newDisplayVal) {
+    if (newDisplayVal === 'clear') {
+        displayVal = '0';
+    } else if (displayVal === '0') {
+        displayVal = newDisplayVal;
+    } else {
+        displayVal += newDisplayVal;
+    }
+
+    display.textContent = displayVal;
+}
 
 const numBtns = document.querySelectorAll('.num-btn');
 numBtns.forEach(btn => {
-    btn.addEventListener('click', (event) => {
-        if (display.textContent === '0'){
-            display.textContent = event.target.textContent;
-        } else {
-            display.textContent += event.target.textContent;
-        }
-    })
+    btn.addEventListener('click', (event) => updateDisplay(event.target.textContent));
 });
 
 const clearBtn = document.querySelector('.clear-btn');
-clearBtn.addEventListener('click', () => display.textContent = '0');
+clearBtn.addEventListener('click', () => updateDisplay('clear'));
