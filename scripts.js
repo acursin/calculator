@@ -1,11 +1,7 @@
 function add(a, b) { return a + b; }
 function subtract(a, b) { return a - b; }
 function multiply(a, b) { return a * b; }
-function divide (a, b) { return a / b; }
-
-let firstNum = '';
-let secondNum = '';
-let curOperator = '';
+function divide(a, b) { return a / b; }
 
 function operate (numA, operator, numB) {
     switch (operator) {
@@ -23,24 +19,66 @@ function operate (numA, operator, numB) {
 }
 
 const display = document.querySelector('.display');
-let displayVal = display.textContent;
+let displayNum = +display.textContent;
 
-let updateDisplay = function (newDisplayVal) {
-    if (newDisplayVal === 'clear') {
-        displayVal = '0';
-    } else if (displayVal === '0') {
-        displayVal = newDisplayVal;
+let memory = {
+    firstNum: 0,
+    operator: '',
+    secondNum: 0,
+    lastBtn: '',
+}
+
+let updateDisplay = function (newDisplayNum) {
+    if (memory.lastBtn !== 'num') {
+        display.textContent = newDisplayNum;
     } else {
-        displayVal += newDisplayVal;
+        display.textContent += newDisplayNum;
     }
 
-    display.textContent = displayVal;
+    displayNum = +display.textContent;
+}
+
+let calculate = function (lastBtnPressed) {
+    if (memory.lastBtn === 'equals') {
+        memory.firstNum = displayNum;
+    } else {
+        memory.secondNum = displayNum;
+    }
+
+    memory.lastBtn = lastBtnPressed;
+    updateDisplay(operate(memory.firstNum, memory.operator, memory.secondNum));
 }
 
 const numBtns = document.querySelectorAll('.num-btn');
 numBtns.forEach(btn => {
-    btn.addEventListener('click', (event) => updateDisplay(event.target.textContent));
+    btn.addEventListener('click', (e) => {
+        updateDisplay(e.target.textContent);
+        memory.lastBtn = 'num';
+    });
 });
 
 const clearBtn = document.querySelector('.clear-btn');
-clearBtn.addEventListener('click', () => updateDisplay('clear'));
+clearBtn.addEventListener('click', () => {
+    memory.firstNum = 0;
+    memory.operator = '';
+    memory.secondNum = 0;
+    memory.lastBtn = '';
+    updateDisplay('0');
+});
+
+const operatorBtns = document.querySelectorAll('.operator-btn');
+operatorBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        if (memory.operator && (memory.lastBtn != 'operator') && (memory.lastBtn != 'equals')) {
+            calculate('operator');
+        }
+        memory.firstNum = displayNum;
+        memory.operator = e.target.textContent;
+        memory.lastBtn = 'operator';
+    });
+});
+
+const equalsBtn = document.querySelector('.equals-btn');
+equalsBtn.addEventListener('click', () => {
+    if (memory.operator !== '') calculate('equals');
+})
