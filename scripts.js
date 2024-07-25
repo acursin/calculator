@@ -29,7 +29,10 @@ let memory = {
 }
 
 let updateDisplay = function (newDisplayNum) {
-    if (memory.lastBtn !== 'num') {
+    if (Number.isNaN(newDisplayNum)) {
+        display.textContent = 'no no no ;)'
+    }
+    else if (memory.lastBtn !== 'num') {
         display.textContent = newDisplayNum;
     } else {
         display.textContent += newDisplayNum;
@@ -46,7 +49,8 @@ let calculate = function (lastBtnPressed) {
     }
 
     memory.lastBtn = lastBtnPressed;
-    updateDisplay(operate(memory.firstNum, memory.operator, memory.secondNum));
+    let calculatedNum = operate(memory.firstNum, memory.operator, memory.secondNum);
+    updateDisplay(calculatedNum);
 }
 
 const numBtns = document.querySelectorAll('.num-btn');
