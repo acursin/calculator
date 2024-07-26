@@ -90,7 +90,7 @@ clearBtn.addEventListener('click', (e) => {
 const operatorBtns = document.querySelectorAll('.operator-btn');
 operatorBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        if (memory.operator && (memory.lastBtn != 'operator') && (memory.lastBtn != 'equals')) {
+        if (memory.lastBtn != 'operator' && memory.numToEnter === 'second') {
             calculate('operator');
         }
         memory.firstNum = displayNum;
