@@ -18,6 +18,8 @@ function operate (numA, operator, numB) {
     }
 }
 
+const MAX_DISPLAY_LENGTH = 9;
+
 const display = document.querySelector('.display');
 let displayNum = +display.textContent;
 
@@ -41,13 +43,27 @@ const updateDisplay = function (newDisplayNum) {
     }
 
     displayNum = +display.textContent;
+
+    // fitDisplay();
 }
+
+// const fitDisplay = function () {
+//     if (display.textContent.replace('.', '').length <= MAX_DISPLAY_LENGTH) {
+//         return;
+//     }
+
+//     if (display)
+// }
 
 const numPress = function (numInput) {
     if (numInput === '0' && display.textContent === '0') return;
+    if (memory.numInProgress === true
+        && display.textContent.replace('.', '').length === MAX_DISPLAY_LENGTH) {
+            return;
+        }
+    memory.disabledOperator = '';
     updateDisplay(numInput);
     memory.numInProgress = true;
-    memory.disabledOperator = '';
 }
 
 const decimalPress = function (decimalInput) {
@@ -81,7 +97,7 @@ const equalsPress = function () {
 
 const operatorPress = function (operatorInput) {
     if (memory.disabledOperator === operatorInput) return;
-    if (memory.disabledOperator !== '' && memory.numToEnter === 'second') {
+    if (memory.numToEnter === 'second') {
         equalsPress();
     }
     memory.firstNum = displayNum;
