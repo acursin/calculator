@@ -30,7 +30,7 @@ let memory = {
     decimalBtnPressed: '',
 }
 
-let updateDisplay = function (newDisplayNum) {
+const updateDisplay = function (newDisplayNum) {
     if (Number.isNaN(newDisplayNum)) {
         display.textContent = 'no no no ;)'
     }
@@ -43,7 +43,7 @@ let updateDisplay = function (newDisplayNum) {
     displayNum = +display.textContent;
 }
 
-let calculate = function (lastBtnPressed) {
+const calculate = function (lastBtnPressed) {
     if (memory.numToEnter === 'first') {
         memory.firstNum = displayNum;
     }
@@ -58,11 +58,15 @@ let calculate = function (lastBtnPressed) {
     memory.numToEnter = 'first';
 }
 
+const numPress = function (num) {
+    updateDisplay(num);
+    memory.lastBtn = 'num';
+}
+
 const numBtns = document.querySelectorAll('.num-btn');
 numBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        updateDisplay(e.target.textContent);
-        memory.lastBtn = 'num';
+        numPress(e.target.textContent);
     });
 });
 
@@ -74,17 +78,6 @@ decimalBtn.addEventListener('click', (e) => {
         updateDisplay(e.target.textContent);
     }
     memory.lastBtn = 'num';
-});
-
-const clearBtn = document.querySelector('.clear-btn');
-clearBtn.addEventListener('click', (e) => {
-    memory.firstNum = 0;
-    memory.operator = '';
-    memory.secondNum = 0;
-    memory.numToEnter = 'first';
-    memory.lastBtn = '';
-    memory.decimalBtnPressed = '';
-    updateDisplay('0');
 });
 
 const operatorBtns = document.querySelectorAll('.operator-btn');
@@ -103,4 +96,25 @@ operatorBtns.forEach(btn => {
 const equalsBtn = document.querySelector('.equals-btn');
 equalsBtn.addEventListener('click', () => {
     if (memory.operator !== '') calculate('equals');
-})
+});
+
+const backspaceBtn = document.querySelector('.backspace-btn');
+backspaceBtn.addEventListener('click', () => {
+    memory.lastBtn = 'backspace';
+    if (display.textContent.length === 1) {
+        updateDisplay('0');
+    } else {
+        updateDisplay(display.textContent.slice(0, -1));
+    }
+});
+
+const clearBtn = document.querySelector('.clear-btn');
+clearBtn.addEventListener('click', (e) => {
+    memory.firstNum = 0;
+    memory.operator = '';
+    memory.secondNum = 0;
+    memory.numToEnter = 'first';
+    memory.lastBtn = '';
+    memory.decimalBtnPressed = '';
+    updateDisplay('0');
+});
