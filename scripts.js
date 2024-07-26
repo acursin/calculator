@@ -84,11 +84,11 @@ const operatorPress = function (operatorInput) {
     memory.lastBtn = 'operator';
 }
 
-const equalsPress = function() {
+const equalsPress = function () {
     if (memory.operator !== '') calculate('equals');
 }
 
-const backspacePress = function() {
+const backspacePress = function () {
     memory.lastBtn = 'backspace';
     if (display.textContent.length === 1) {
         updateDisplay('0');
@@ -97,7 +97,7 @@ const backspacePress = function() {
     }
 }
 
-const clearPress = function() {
+const clearPress = function () {
     memory.firstNum = 0;
     memory.operator = '';
     memory.secondNum = 0;
