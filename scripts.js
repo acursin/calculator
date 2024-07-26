@@ -26,14 +26,15 @@ let memory = {
     operator: '',
     secondNum: 0,
     numToEnter: 'first',
-    lastBtn: '',
+    numInProgress: false,
+    disabledOperator: '',
 }
 
 const updateDisplay = function (newDisplayNum) {
     if (Number.isNaN(newDisplayNum)) {
         display.textContent = 'Error!'
     }
-    else if (memory.lastBtn !== 'num') {
+    else if (memory.numInProgress === false) {
         display.textContent = newDisplayNum;
     } else {
         display.textContent += newDisplayNum;
@@ -42,7 +43,27 @@ const updateDisplay = function (newDisplayNum) {
     displayNum = +display.textContent;
 }
 
-const calculate = function (lastBtnPressed) {
+const numPress = function (numInput) {
+    if (numInput === '0' && display.textContent === '0') return;
+    updateDisplay(numInput);
+    memory.numInProgress = true;
+    memory.disabledOperator = '';
+}
+
+const decimalPress = function (decimalInput) {
+    if (display.textContent.includes('.')) return;
+
+    if (memory.numInProgress === false) {
+        updateDisplay('0.');
+        memory.numInProgress = true;
+    } else {
+        updateDisplay(decimalInput);
+    }
+    memory.disabledOperator = '';
+}
+
+const equalsPress = function () {
+    if (memory.operator === '') return;
     if (memory.numToEnter === 'first') {
         memory.firstNum = displayNum;
     }
@@ -50,50 +71,34 @@ const calculate = function (lastBtnPressed) {
         memory.secondNum = displayNum;
     }
 
-    memory.lastBtn = lastBtnPressed;
     let calculatedNum = operate(memory.firstNum, memory.operator, memory.secondNum);
-    updateDisplay(calculatedNum);
     memory.firstNum = calculatedNum;
     memory.numToEnter = 'first';
-}
-
-const numPress = function (numInput) {
-    if (numInput === '0' && display.textContent === '0') return;
-    updateDisplay(numInput);
-    memory.lastBtn = 'num';
-}
-
-const decimalPress = function (decimalInput) {
-    if (display.textContent.includes('.')) return;
-
-    if (memory.lastBtn !== 'num') {
-        updateDisplay('0.')
-    } else {
-        updateDisplay(decimalInput);
-    }
-    memory.lastBtn = 'num';
+    memory.numInProgress = false;
+    memory.disabledOperator = '';
+    updateDisplay(calculatedNum);
 }
 
 const operatorPress = function (operatorInput) {
-    if (memory.lastBtn != 'operator' && memory.numToEnter === 'second') {
-        calculate('operator');
+    if (memory.disabledOperator === operatorInput) return;
+    if (memory.disabledOperator !== '' && memory.numToEnter === 'second') {
+        equalsPress();
     }
     memory.firstNum = displayNum;
     memory.operator = operatorInput;
     memory.numToEnter = 'second';
-    memory.lastBtn = 'operator';
-}
-
-const equalsPress = function () {
-    if (memory.operator !== '') calculate('equals');
+    memory.numInProgress = false;
+    memory.disabledOperator = '';
 }
 
 const backspacePress = function () {
-    memory.lastBtn = 'backspace';
     if (display.textContent.length === 1) {
+        memory.numInProgress = false;
         updateDisplay('0');
     } else {
+        memory.numInProgress = false;
         updateDisplay(display.textContent.slice(0, -1));
+        memory.numInProgress = true;
     }
 }
 
@@ -102,7 +107,8 @@ const clearPress = function () {
     memory.operator = '';
     memory.secondNum = 0;
     memory.numToEnter = 'first';
-    memory.lastBtn = '';
+    memory.numInProgress = false;
+    memory.disabledOperator = '';
     updateDisplay('0');
 }
 
@@ -114,13 +120,13 @@ numBtns.forEach(btn => {
 const decimalBtn = document.querySelector('.decimal-btn');
 decimalBtn.addEventListener('click', (e) => decimalPress(e.target.value));
 
+const equalsBtn = document.querySelector('.equals-btn');
+equalsBtn.addEventListener('click', () => equalsPress());
+
 const operatorBtns = document.querySelectorAll('.operator-btn');
 operatorBtns.forEach(btn => {
     btn.addEventListener('click', (e) => operatorPress(e.target.value));
 });
-
-const equalsBtn = document.querySelector('.equals-btn');
-equalsBtn.addEventListener('click', () => equalsPress());
 
 const backspaceBtn = document.querySelector('.backspace-btn');
 backspaceBtn.addEventListener('click', () => backspacePress());
@@ -136,7 +142,11 @@ document.addEventListener('keydown', (e) => {
     else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
         operatorPress(e.key);
     }
+    else if (e.key === 'x') operatorPress('*');
+
     else if (e.key === '=' || e.key === 'Enter') equalsPress();
 
     else if (e.key === 'Backspace') backspacePress();
+
+    else if (e.key === 'Escape') clearPress();
 });
