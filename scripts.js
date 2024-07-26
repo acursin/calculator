@@ -44,16 +44,32 @@ const updateDisplay = function (newDisplayNum) {
 
     displayNum = +display.textContent;
 
-    // fitDisplay();
+    fitDisplay();
 }
 
-// const fitDisplay = function () {
-//     if (display.textContent.replace('.', '').length <= MAX_DISPLAY_LENGTH) {
-//         return;
-//     }
+const fitDisplay = function () {
+    if (display.textContent.replace('.', '').length <= MAX_DISPLAY_LENGTH) {
+        return;
+    }
 
-//     if (display)
-// }
+    let trimmedNum = '';
+
+    if (displayNum >= 999999999) {
+        trimmedNum = displayNum.toExponential().replace('+', '');
+        if (trimmedNum.length > MAX_DISPLAY_LENGTH + 1) {
+            trimmedNum = displayNum.toExponential(6).replace('+', '');
+        }
+    } else {
+        let preDecimalLen = display.textContent
+            .slice(0, display.textContent.indexOf('.'))
+            .length;
+
+        trimmedNum = displayNum.toFixed(9 - preDecimalLen);
+    }
+
+    display.textContent = trimmedNum;
+    return;
+}
 
 const numPress = function (numInput) {
     if (numInput === '0' && display.textContent === '0') return;
@@ -97,14 +113,14 @@ const equalsPress = function () {
 
 const operatorPress = function (operatorInput) {
     if (memory.disabledOperator === operatorInput) return;
-    if (memory.numToEnter === 'second') {
+    if (memory.disabledOperator === '' && memory.numToEnter === 'second') {
         equalsPress();
     }
     memory.firstNum = displayNum;
     memory.operator = operatorInput;
     memory.numToEnter = 'second';
     memory.numInProgress = false;
-    memory.disabledOperator = '';
+    memory.disabledOperator = operatorInput;
 }
 
 const backspacePress = function () {
