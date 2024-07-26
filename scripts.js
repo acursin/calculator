@@ -27,7 +27,6 @@ let memory = {
     secondNum: 0,
     numToEnter: 'first',
     lastBtn: '',
-    decimalBtnPressed: '',
 }
 
 const updateDisplay = function (newDisplayNum) {
@@ -63,6 +62,17 @@ const numPress = function (num) {
     memory.lastBtn = 'num';
 }
 
+const decimalPress = function (decimal) {
+    if (display.textContent.includes('.')) return;
+
+    if (memory.lastBtn !== 'num') {
+        updateDisplay('0.')
+    } else {
+        updateDisplay(decimal);
+    }
+    memory.lastBtn = 'num';
+}
+
 const numBtns = document.querySelectorAll('.num-btn');
 numBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -72,13 +82,24 @@ numBtns.forEach(btn => {
 
 const decimalBtn = document.querySelector('.decimal-btn');
 decimalBtn.addEventListener('click', (e) => {
-    if (memory.lastBtn !== 'num') {
-        updateDisplay('0.')
-    } else {
-        updateDisplay(e.target.textContent);
-    }
-    memory.lastBtn = 'num';
+    decimalPress(e.target.textContent);
 });
+
+document.addEventListener('keydown', (e) => {
+    if (+e.key) {
+        numPress(e.key);
+    }
+
+    if (e.key === '.') {
+        decimalPress(e.key);
+    }
+});
+
+
+
+
+
+
 
 const operatorBtns = document.querySelectorAll('.operator-btn');
 operatorBtns.forEach(btn => {
@@ -115,6 +136,5 @@ clearBtn.addEventListener('click', (e) => {
     memory.secondNum = 0;
     memory.numToEnter = 'first';
     memory.lastBtn = '';
-    memory.decimalBtnPressed = '';
     updateDisplay('0');
 });
