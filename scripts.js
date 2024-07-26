@@ -108,15 +108,15 @@ const clearPress = function () {
 
 const numBtns = document.querySelectorAll('.num-btn');
 numBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => numPress(e.target.textContent));
+    btn.addEventListener('click', (e) => numPress(e.target.value));
 });
 
 const decimalBtn = document.querySelector('.decimal-btn');
-decimalBtn.addEventListener('click', (e) => decimalPress(e.target.textContent));
+decimalBtn.addEventListener('click', (e) => decimalPress(e.target.value));
 
 const operatorBtns = document.querySelectorAll('.operator-btn');
 operatorBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => operatorPress(e.target.textContent));
+    btn.addEventListener('click', (e) => operatorPress(e.target.value));
 });
 
 const equalsBtn = document.querySelector('.equals-btn');
