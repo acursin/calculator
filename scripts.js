@@ -25,7 +25,9 @@ let memory = {
     firstNum: 0,
     operator: '',
     secondNum: 0,
+    numToEnter: 'first',
     lastBtn: '',
+    decimalBtnPressed: '',
 }
 
 let updateDisplay = function (newDisplayNum) {
@@ -42,15 +44,18 @@ let updateDisplay = function (newDisplayNum) {
 }
 
 let calculate = function (lastBtnPressed) {
-    if (memory.lastBtn === 'equals') {
+    if (memory.numToEnter === 'first') {
         memory.firstNum = displayNum;
-    } else {
+    }
+    else {
         memory.secondNum = displayNum;
     }
 
     memory.lastBtn = lastBtnPressed;
     let calculatedNum = operate(memory.firstNum, memory.operator, memory.secondNum);
     updateDisplay(calculatedNum);
+    memory.firstNum = calculatedNum;
+    memory.numToEnter = 'first';
 }
 
 const numBtns = document.querySelectorAll('.num-btn');
@@ -61,12 +66,24 @@ numBtns.forEach(btn => {
     });
 });
 
+const decimalBtn = document.querySelector('.decimal-btn');
+decimalBtn.addEventListener('click', (e) => {
+    if (memory.lastBtn !== 'num') {
+        updateDisplay('0.')
+    } else {
+        updateDisplay(e.target.textContent);
+    }
+    memory.lastBtn = 'num';
+});
+
 const clearBtn = document.querySelector('.clear-btn');
-clearBtn.addEventListener('click', () => {
+clearBtn.addEventListener('click', (e) => {
     memory.firstNum = 0;
     memory.operator = '';
     memory.secondNum = 0;
+    memory.numToEnter = 'first';
     memory.lastBtn = '';
+    memory.decimalBtnPressed = '';
     updateDisplay('0');
 });
 
@@ -78,6 +95,7 @@ operatorBtns.forEach(btn => {
         }
         memory.firstNum = displayNum;
         memory.operator = e.target.textContent;
+        memory.numToEnter = 'second';
         memory.lastBtn = 'operator';
     });
 });
