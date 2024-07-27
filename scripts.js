@@ -20,6 +20,7 @@ function operate (numA, operator, numB) {
 
 const MAX_DISPLAY_LENGTH = 9;
 
+const displayContainer = document.querySelector('.display-container');
 const display = document.querySelector('.display');
 let displayNum = +display.textContent;
 
@@ -44,10 +45,12 @@ const updateDisplay = function (newDisplayNum) {
 
     displayNum = +display.textContent;
 
+    fitDigits();
+    addCommas();
     fitDisplay();
 }
 
-const fitDisplay = function () {
+const fitDigits = function () {
     if (display.textContent.replace('.', '').length <= MAX_DISPLAY_LENGTH) {
         return;
     }
@@ -69,6 +72,15 @@ const fitDisplay = function () {
 
     display.textContent = trimmedNum;
     return;
+}
+
+const fitDisplay = function () {
+    display.style.fontSize = '125px';
+    if (display.offsetWidth > displayContainer.offsetWidth) {
+        let overflowWidth = display.offsetWidth - displayContainer.offsetWidth;
+        let overflowPercent = 1 - (overflowWidth / display.offsetWidth);
+        display.style.fontSize = `${125 * overflowPercent}px`;
+    }
 }
 
 const numPress = function (numInput) {
