@@ -46,7 +46,6 @@ const updateDisplay = function (newDisplayNum) {
     displayNum = +display.textContent;
 
     fitDigits();
-    addCommas();
     fitDisplay();
 }
 
