@@ -56,10 +56,10 @@ const fitDigits = function () {
 
     let trimmedNum = '';
 
-    if (displayNum >= 999999999) {
-        trimmedNum = displayNum.toExponential().replace('+', '');
+    if (displayNum >= 999999999 || displayNum <= 0.00000001) {
+        trimmedNum = displayNum.toExponential();
         if (trimmedNum.length > MAX_DISPLAY_LENGTH + 1) {
-            trimmedNum = displayNum.toExponential(6).replace('+', '');
+            trimmedNum = displayNum.toExponential(5);
         }
     } else {
         let preDecimalLen = display.textContent
