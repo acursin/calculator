@@ -72,10 +72,23 @@ body {
     color: #fff
 }
 
+.btn:hover {
+    box-shadow: 10px 10px 5px #101010;
+}
+
+.btn:active {
+    background: #666666;
+}
+
 .clear-btn,
 .backspace-btn {
     background: #d4d4d2;
     color: #000;
+}
+
+.clear-btn:active,
+.backspace-btn:active {
+    background: #f7f7f5;
 }
 
 .zero-btn,
@@ -86,7 +99,12 @@ body {
 
 .operator-btn,
 .equals-btn {
-    background: #8c00ff;
+    background: #8231c5;
+}
+
+.operator-btn:active,
+.equals-btn:active {
+    background: #9f3eee;
 }
 
 .zero-btn {
